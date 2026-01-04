@@ -34,6 +34,31 @@ const userSchema = new mongoose.Schema({
         required: function() { return this.role === 'student'; },
         unique: true,
         sparse: true
+    },
+    // Faculty-specific fields
+    assignedCourses: [{
+        courseKey: {
+            type: String,
+            enum: ['course1', 'course2', 'course3'], // DBMS, Web Tech, Software Eng
+            required: function() { return this.role === 'faculty'; }
+        },
+        courseName: {
+            type: String,
+            required: function() { return this.role === 'faculty'; }
+        }
+    }],
+    // Student-specific fields
+    class: {
+        type: String,
+        required: function() { return this.role === 'student'; },
+        enum: ['CSE-A', 'CSE-B', 'CSE-C', 'IT-A', 'IT-B', 'ECE-A', 'ECE-B']
+    },
+    semester: {
+        type: Number,
+        required: function() { return this.role === 'student'; },
+        min: 1,
+        max: 8,
+        default: 5 // 5th semester for current courses
     }
 }, {
     timestamps: true

@@ -10,7 +10,21 @@ const sampleData = {
     email: 'faculty@university.edu',
     password: 'password123',
     role: 'faculty',
-    name: 'Dr. John Smith'
+    name: 'Dr. John Smith',
+    assignedCourses: [
+      {
+        courseKey: 'course1',
+        courseName: 'Database Management Systems'
+      },
+      {
+        courseKey: 'course2',
+        courseName: 'Web Technologies'
+      },
+      {
+        courseKey: 'course3',
+        courseName: 'Software Engineering'
+      }
+    ]
   },
   students: [
     {
@@ -19,7 +33,9 @@ const sampleData = {
       password: 'password123',
       role: 'student',
       name: 'Alice Johnson',
-      rollNumber: 'CS2024001'
+      rollNumber: 'CS2024001',
+      class: 'CSE-A',
+      semester: 5
     },
     {
       username: 'student2',
@@ -27,7 +43,9 @@ const sampleData = {
       password: 'password123',
       role: 'student',
       name: 'Bob Wilson',
-      rollNumber: 'CS2024002'
+      rollNumber: 'CS2024002',
+      class: 'CSE-A',
+      semester: 5
     },
     {
       username: 'student3',
@@ -35,7 +53,9 @@ const sampleData = {
       password: 'password123',
       role: 'student',
       name: 'Carol Davis',
-      rollNumber: 'CS2024003'
+      rollNumber: 'CS2024003',
+      class: 'CSE-B',
+      semester: 5
     },
     {
       username: 'student4',
@@ -43,7 +63,9 @@ const sampleData = {
       password: 'password123',
       role: 'student',
       name: 'David Brown',
-      rollNumber: 'CS2024004'
+      rollNumber: 'CS2024004',
+      class: 'CSE-B',
+      semester: 5
     },
     {
       username: 'student5',
@@ -51,42 +73,59 @@ const sampleData = {
       password: 'password123',
       role: 'student',
       name: 'Emma Taylor',
-      rollNumber: 'CS2024005'
+      rollNumber: 'CS2024005',
+      class: 'CSE-A',
+      semester: 5
     }
   ]
 };
 
-// Sample marks data
+// Helper function to convert total marks to test1, test2, esa format
+function convertMarksToFormat(totalMarks) {
+  // Distribute marks: test1 (40%), test2 (40%), esa (20%)
+  const test1 = Math.round(totalMarks * 0.4);
+  const test2 = Math.round(totalMarks * 0.4);
+  const esa = totalMarks - test1 - test2; // Remaining for ESA
+  
+  // Ensure values are within valid ranges
+  return {
+    test1: Math.min(Math.max(test1, 0), 40),
+    test2: Math.min(Math.max(test2, 0), 40),
+    esa: Math.min(Math.max(esa, 0), 20)
+  };
+}
+
+// Sample marks data (converted to proper format)
 const sampleMarks = [
   {
     rollNumber: 'CS2024001',
-    course1: { marks: 95 }, // S
-    course2: { marks: 88 }, // A
-    course3: { marks: 92 }  // S
+    course1: convertMarksToFormat(95), // S
+    course2: convertMarksToFormat(88), // A
+    course3: convertMarksToFormat(92)  // S
   },
   {
     rollNumber: 'CS2024002',
-    course1: { marks: 82 }, // A
-    course2: { marks: 75 }, // B
-    course3: { marks: 78 }  // B
+    course1: convertMarksToFormat(82), // A
+    course2: convertMarksToFormat(75), // B
+    course3: convertMarksToFormat(78)  // B
   },
   {
     rollNumber: 'CS2024003',
-    course1: { marks: 67 }, // C
-    course2: { marks: 71 }, // B
-    course3: { marks: 85 }  // A
+    course1: convertMarksToFormat(67), // C
+    course2: convertMarksToFormat(71), // B
+    course3: convertMarksToFormat(85)  // A
   },
   {
     rollNumber: 'CS2024004',
-    course1: { marks: 55 }, // D
-    course2: { marks: 62 }, // C
-    course3: { marks: 48 }  // F
+    course1: convertMarksToFormat(55), // D
+    course2: convertMarksToFormat(62), // C
+    course3: convertMarksToFormat(48)  // F
   },
   {
     rollNumber: 'CS2024005',
-    course1: { marks: 91 }, // S
-    course2: { marks: 87 }, // A
-    course3: { marks: 89 }  // A
+    course1: convertMarksToFormat(91), // S
+    course2: convertMarksToFormat(87), // A
+    course3: convertMarksToFormat(89)  // A
   }
 ];
 

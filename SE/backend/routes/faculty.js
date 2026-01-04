@@ -7,14 +7,14 @@ const router = express.Router();
 // Apply authentication middleware to all routes
 router.use(auth, facultyAuth);
 
-// Add new student
+// Add new student with class assignment
 router.post('/add-student', async (req, res) => {
     try {
-        const { username, email, password, name, rollNumber } = req.body;
+        const { username, email, password, name, rollNumber, class: studentClass, semester } = req.body;
 
         // Validation
-        if (!username || !email || !password || !name || !rollNumber) {
-            return res.status(400).json({ message: 'All fields are required' });
+        if (!username || !email || !password || !name || !rollNumber || !studentClass) {
+            return res.status(400).json({ message: 'All fields including class are required' });
         }
 
         // Check if student already exists
@@ -33,7 +33,9 @@ router.post('/add-student', async (req, res) => {
             password,
             role: 'student',
             name,
-            rollNumber
+            rollNumber,
+            class: studentClass,
+            semester: semester || 5
         });
 
         await student.save();
@@ -42,7 +44,8 @@ router.post('/add-student', async (req, res) => {
         const marks = new Marks({
             studentId: student._id,
             rollNumber: student.rollNumber,
-            studentName: student.name
+            studentName: student.name,
+            class: student.class
         });
 
         await marks.save();
@@ -54,7 +57,9 @@ router.post('/add-student', async (req, res) => {
                 name: student.name,
                 rollNumber: student.rollNumber,
                 username: student.username,
-                email: student.email
+                email: student.email,
+                class: student.class,
+                semester: student.semester
             }
         });
     } catch (error) {
@@ -63,22 +68,77 @@ router.post('/add-student', async (req, res) => {
     }
 });
 
-// Get all students
+// Get students based on faculty's assigned courses and classes
 router.get('/students', async (req, res) => {
     try {
-        const students = await User.find({ role: 'student' }).select('-password');
+        console.log('Faculty getting students request from user:', req.user?.name, req.user?.role);
+        
+        // The faculty user is already loaded in req.user from auth middleware
+        const faculty = req.user;
+        console.log('Faculty loaded:', faculty ? faculty.name : 'None', 'Assigned courses:', faculty?.assignedCourses?.length || 0);
+        
+        if (!faculty) {
+            return res.status(404).json({ message: 'Faculty not found' });
+        }
+
+        // Check if faculty has assigned courses - but allow viewing all students for now
+        const hasAssignedCourses = faculty.assignedCourses && faculty.assignedCourses.length > 0;
+        console.log('Faculty has assigned courses:', hasAssignedCourses);
+
+        const { class: filterClass } = req.query;
+        
+        // Build query to get students
+        let studentQuery = { role: 'student' };
+        if (filterClass) {
+            studentQuery.class = filterClass;
+        }
+
+        const students = await User.find(studentQuery).select('-password');
+        console.log(`Found ${students.length} students in database`);
+        
+        if (students.length === 0) {
+            return res.json([]);
+        }
+
         const studentsWithMarks = await Promise.all(
             students.map(async (student) => {
                 const marks = await Marks.findOne({ studentId: student._id });
                 const studentObj = student.toObject();
+                
+                // If faculty has assigned courses, filter marks accordingly
+                let filteredMarks = null;
+                if (marks) {
+                    if (hasAssignedCourses) {
+                        filteredMarks = { ...marks.toObject() };
+                        
+                        // Only include courses that faculty is assigned to
+                        const assignedCourseKeys = faculty.assignedCourses.map(c => c.courseKey);
+                        
+                        if (!assignedCourseKeys.includes('course1')) {
+                            delete filteredMarks.course1;
+                        }
+                        if (!assignedCourseKeys.includes('course2')) {
+                            delete filteredMarks.course2;
+                        }
+                        if (!assignedCourseKeys.includes('course3')) {
+                            delete filteredMarks.course3;
+                        }
+                    } else {
+                        // If no assigned courses, show all marks but with limited edit access
+                        filteredMarks = marks.toObject();
+                    }
+                }
+                
                 return {
                     ...studentObj,
-                    id: studentObj._id, // Add id field for frontend compatibility
-                    marks: marks || null
+                    id: studentObj._id,
+                    marks: filteredMarks,
+                    assignedCourses: faculty.assignedCourses || [] // Send faculty's assigned courses for UI
                 };
             })
         );
 
+        console.log('Sending students with filtered marks:', studentsWithMarks.length);
         res.json(studentsWithMarks);
     } catch (error) {
         console.error('Get students error:', error);
@@ -86,22 +146,47 @@ router.get('/students', async (req, res) => {
     }
 });
 
-// Update student marks
+// Get available classes
+router.get('/classes', async (req, res) => {
+    try {
+        const classes = ['CSE-A', 'CSE-B', 'CSE-C', 'IT-A', 'IT-B', 'ECE-A', 'ECE-B'];
+        
+        // Get count of students in each class
+        const classData = await Promise.all(
+            classes.map(async (className) => {
+                const count = await User.countDocuments({ role: 'student', class: className });
+                return { name: className, studentCount: count };
+            })
+        );
+        
+        res.json(classData);
+    } catch (error) {
+        console.error('Get classes error:', error);
+        res.status(500).json({ message: 'Server error while fetching classes' });
+    }
+});
+
+// Update student marks (only for assigned courses)
 router.put('/update-marks/:studentId', async (req, res) => {
     try {
         const { studentId } = req.params;
-        const { course1, course2, course3 } = req.body;
+        const marksUpdate = req.body;
 
-        // Validation
-        if (!course1 || !course2 || !course3) {
-            return res.status(400).json({ message: 'All course marks are required' });
+        // Get faculty user with assigned courses
+        const faculty = await User.findById(req.user.userId);
+        if (!faculty || !faculty.assignedCourses || faculty.assignedCourses.length === 0) {
+            return res.status(403).json({ message: 'No courses assigned to this faculty' });
         }
 
-        // Validate marks range
-        const courses = [course1, course2, course3];
-        for (let course of courses) {
-            if (course.marks < 0 || course.marks > 100) {
-                return res.status(400).json({ message: 'Marks must be between 0 and 100' });
+        // Get assigned course keys
+        const assignedCourseKeys = faculty.assignedCourses.map(c => c.courseKey);
+
+        // Validate that faculty can only update their assigned courses
+        for (let courseKey in marksUpdate) {
+            if (!assignedCourseKeys.includes(courseKey)) {
+                return res.status(403).json({ 
+                    message: `You are not authorized to update marks for ${courseKey}` 
+                });
             }
         }
 
@@ -118,20 +203,55 @@ router.put('/update-marks/:studentId', async (req, res) => {
             marks = new Marks({
                 studentId,
                 rollNumber: student.rollNumber,
-                studentName: student.name
+                studentName: student.name,
+                class: student.class
             });
         }
 
-        // Update marks
-        marks.course1.marks = course1.marks;
-        marks.course2.marks = course2.marks;
-        marks.course3.marks = course3.marks;
+        // Update only the assigned courses
+        for (let courseKey of assignedCourseKeys) {
+            if (marksUpdate[courseKey]) {
+                const courseData = marksUpdate[courseKey];
+                
+                // Validate marks ranges
+                if (courseData.test1 !== undefined && (courseData.test1 < 0 || courseData.test1 > 40)) {
+                    return res.status(400).json({ message: 'Test 1 marks must be between 0 and 40' });
+                }
+                if (courseData.test2 !== undefined && (courseData.test2 < 0 || courseData.test2 > 40)) {
+                    return res.status(400).json({ message: 'Test 2 marks must be between 0 and 40' });
+                }
+                if (courseData.esa !== undefined && (courseData.esa < 0 || courseData.esa > 20)) {
+                    return res.status(400).json({ message: 'ESA marks must be between 0 and 20' });
+                }
+
+                // Update marks and mark as modified for mongoose change detection
+                if (courseData.test1 !== undefined) {
+                    marks[courseKey].test1 = courseData.test1;
+                    marks.markModified(`${courseKey}.test1`);
+                }
+                if (courseData.test2 !== undefined) {
+                    marks[courseKey].test2 = courseData.test2;
+                    marks.markModified(`${courseKey}.test2`);
+                }
+                if (courseData.esa !== undefined) {
+                    marks[courseKey].esa = courseData.esa;
+                    marks.markModified(`${courseKey}.esa`);
+                }
+                // Mark the entire course object as modified
+                marks.markModified(courseKey);
+            }
+        }
 
         await marks.save();
+        
+        // Reload marks from database to get calculated totals and grades
+        const updatedMarks = await Marks.findOne({ studentId });
+        console.log('Marks saved successfully for student:', studentId);
+        console.log('Updated marks:', JSON.stringify(updatedMarks, null, 2));
 
         res.json({ 
             message: 'Marks updated successfully',
-            marks 
+            marks: updatedMarks
         });
     } catch (error) {
         console.error('Update marks error:', error);
@@ -139,12 +259,12 @@ router.put('/update-marks/:studentId', async (req, res) => {
     }
 });
 
-// Delete student
+// Delete student (only if faculty has permission for the student's class)
 router.delete('/delete-student/:studentId', async (req, res) => {
     try {
         const { studentId } = req.params;
 
-        // Find and delete student
+        // Find student first
         const student = await User.findById(studentId);
         if (!student) {
             return res.status(404).json({ message: 'Student not found' });
@@ -169,16 +289,32 @@ router.delete('/delete-student/:studentId', async (req, res) => {
     }
 });
 
-// Get analytics for all courses
+// Get analytics for assigned courses only
 router.get('/analytics', async (req, res) => {
     try {
-        const allMarks = await Marks.find({});
+        // Get faculty user with assigned courses
+        const faculty = await User.findById(req.user.userId);
+        if (!faculty || !faculty.assignedCourses || faculty.assignedCourses.length === 0) {
+            return res.status(403).json({ message: 'No courses assigned to this faculty' });
+        }
 
-        const analytics = {
-            course1: calculateCourseAnalytics(allMarks, 'course1'),
-            course2: calculateCourseAnalytics(allMarks, 'course2'),
-            course3: calculateCourseAnalytics(allMarks, 'course3')
-        };
+        const { class: filterClass } = req.query;
+        
+        // Build query for marks
+        let marksQuery = {};
+        if (filterClass) {
+            marksQuery.class = filterClass;
+        }
+
+        const allMarks = await Marks.find(marksQuery);
+        const assignedCourseKeys = faculty.assignedCourses.map(c => c.courseKey);
+
+        const analytics = {};
+        
+        // Only calculate analytics for assigned courses
+        for (let courseKey of assignedCourseKeys) {
+            analytics[courseKey] = calculateCourseAnalytics(allMarks, courseKey);
+        }
 
         res.json(analytics);
     } catch (error) {
@@ -189,12 +325,12 @@ router.get('/analytics', async (req, res) => {
 
 // Helper function to calculate course analytics
 function calculateCourseAnalytics(marksData, courseKey) {
-    const courseMarks = marksData.map(mark => mark[courseKey].marks);
+    const courseTotalMarks = marksData.map(mark => mark[courseKey].totalMarks);
     const courseGrades = marksData.map(mark => mark[courseKey].grade);
 
     // Calculate average
-    const average = courseMarks.length > 0 
-        ? (courseMarks.reduce((sum, mark) => sum + mark, 0) / courseMarks.length).toFixed(2)
+    const average = courseTotalMarks.length > 0 
+        ? (courseTotalMarks.reduce((sum, mark) => sum + mark, 0) / courseTotalMarks.length).toFixed(2)
         : 0;
 
     // Count grades
@@ -211,7 +347,7 @@ function calculateCourseAnalytics(marksData, courseKey) {
         courseName: marksData.length > 0 ? marksData[0][courseKey].name : '',
         average: parseFloat(average),
         gradeCount,
-        totalStudents: courseMarks.length
+        totalStudents: courseTotalMarks.length
     };
 }
 

@@ -11,15 +11,25 @@ const auth = async (req, res, next) => {
         }
 
         const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key');
+        console.log('Decoded token:', decoded);
+        
         const user = await User.findById(decoded.userId).select('-password');
+        console.log('User lookup result:', user ? `Found: ${user.name} (${user.role})` : 'Not found');
         
         if (!user) {
-            return res.status(401).json({ message: 'Token is not valid' });
+            return res.status(401).json({ message: 'Token is not valid - user not found' });
         }
 
-        req.user = user;
+        // Set both user object and userId for compatibility
+        req.user = {
+            ...user.toObject(),
+            userId: user._id
+        };
+        
+        console.log('Auth successful for user:', req.user.name, 'Role:', req.user.role);
         next();
     } catch (error) {
+        console.error('Auth middleware error:', error);
         res.status(401).json({ message: 'Token is not valid' });
     }
 };

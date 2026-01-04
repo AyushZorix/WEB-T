@@ -10,15 +10,27 @@ const studentRoutes = require('./routes/student');
 const app = express();
 const PORT = process.env.PORT || 5001;
 
-// CORS configuration - allow all origins for development
+// Simple CORS configuration that allows all localhost origins
 app.use(cors({
-    origin: true, // Allow all origins
+    origin: true,
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
-    preflightContinue: false,
+    exposedHeaders: ['Authorization'],
     optionsSuccessStatus: 200
 }));
+
+// Handle preflight OPTIONS requests for all routes
+app.use((req, res, next) => {
+    if (req.method === 'OPTIONS') {
+        res.header('Access-Control-Allow-Origin', req.headers.origin || '*');
+        res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, PATCH');
+        res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Accept, Origin');
+        res.header('Access-Control-Allow-Credentials', 'true');
+        return res.status(200).end();
+    }
+    next();
+});
 
 // Body parser middleware
 app.use(express.json({ limit: '10mb' }));
