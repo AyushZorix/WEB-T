@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Booking</title>
+</head>
+<body>
+  <h1>Ticket Booking</h1>
+  <form onsubmit="saveData(event)">
+    <input type="text" id="name" placeholder="Name" required><br><br>
+    <input type="text" id="from" placeholder="From" required><br><br>
+    <input type="text" id="to" placeholder="To" required><br><br>
+    <input type="number" id="nop" placeholder="No. of passengers" required><br><br>
+    <button type="submit">Submit</button>
+  </form>
+
+  <script>
+    function saveData(event) {
+      event.preventDefault(); // prevent page reload
+      const name = document.getElementById("name").value;
+      const from = document.getElementById("from").value;
+      const to = document.getElementById("to").value;
+      const nop = document.getElementById("nop").value;
+
+      // save in localStorage
+      localStorage.setItem("name", name);
+      localStorage.setItem("from", from);
+      localStorage.setItem("to", to);
+      localStorage.setItem("nop", nop);
+
+      // redirect
+      window.location.href = "confirm.html";
+    }
+  </script>
+</body>
+</html>

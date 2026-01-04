@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>elebyname</title>
+</head>
+
+    <style>
+        body {
+            background-color: lightgrey;
+            text-align: center;
+        }
+        h1{
+            color: blue;
+        }
+    </style>
+    <script>
+        function g1(){
+            var x = document.getElementsByName("CS");
+           alert("total element with Cs are " + x.length);
+           alert(x[0].innerHTML);
+        }
+       
+    </script>
+   <body>
+    
+<h4 name = "CS"> socse</h4>
+<h4 name = "CS"> socse</h4>
+    <input type="button" value="click me" onclick="g1()">
+</body>
+</html>

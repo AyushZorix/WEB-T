@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <p>click the following button to call the fn </p>
+    <form>
+        <input type="button" onclick= "sayHello('')" value = "click me ">
+    </form>
+
+    <form name="myForm">
+        First name: <input type="text" name="fname"> <br><br>
+        Last name: <input type="text" name="lname"> <br><br>
+    
+        <!-- Checkbox -->
+        Subscribe? <input type="checkbox" name="subscribe"> <br><br>
+    
+        <input type="button" value="Submit" onclick="sayHello()">
+      </form>
+    
+</body>
+<script>
+    var cnt = 10;
+    var s1 = "" + cnt 
+    var s2 = cnt + "bananas , ah ah ah "
+    var n1 = parseInt("42 is the answer")
+    var n2 = parseFloat("boioyah")
+    document.write("<br>" + s1 + "<br>" + s2 + "<br>" + n1 + "<br>" + n2);
+    //popup - alert , confirm , prompt 
+
+//var jhanda = confirm("do you want to play a game ?")
+//if(jhanda){
+ //   prompt("what is your name ?")
+//}
+//else {
+ //   alert("bye bye")
+//}
+
+//var x = prompt("enter number ")
+//alert("your name is " + x)
+//var y = prompt("enter another number ")
+//alert("your name is " + y)
+//var z = parseInt(x) + parseInt(y) // remember this , popups use string so thats why will do parsing for arithmetic calculation 
+//alert("the sum is " + z)
+
+
+//event handlers - onclick , onmouseover , onmouseout , onload , onunload
+function sayHello(str, str1) {
+    let first = document.myForm.fname.value;
+    let last  = document.myForm.lname.value;
+    let checkbox = document.myForm.subscribe.checked;
+
+    document.write("<br>Hello " + first + " " + last);
+    if (checkbox) {
+      document.write("  Thanks for subscribing!");
+    } else {
+      document.write("  You did not subscribe.");
+    }
+  }
+
+</script>
+</html>

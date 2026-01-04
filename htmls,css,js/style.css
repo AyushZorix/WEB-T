@@ -1,0 +1,20 @@
+
+p{
+    color: red;
+    padding: 1px;
+    margin-top: 6px;
+    text-align: center;
+}
+#ayush{
+    font-size: 20px;
+    font-weight: bold;
+    color : red;
+}
+h1,h2{
+    background-color: black;
+    color: white;
+}
+
+h1[id = "mnb"]{
+    background: gold;
+}

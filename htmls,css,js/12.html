@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dropdown Example</title>
+</head>
+<body id = "sud">
+    <h1>Select a programming language</h1>
+    <h2>Choose one language:</h2>
+
+    <select id="language">
+        <option value="">--Select--</option>
+        <option value="red">red</option>
+        <option value="yellow">yellow</option>
+        <option value="blue">blue</option>
+  
+    </select>
+
+    <br><br>
+    <button onclick="showSelected()">Submit</button>
+
+    <p id="result"></p>
+
+    <script>
+        function showSelected() {
+            var dropdown = document.getElementById("language");
+            var selectedValue = dropdown.value;
+            document.getElementById("sud").style.backgroundColor = selectedValue;
+               
+        }
+    </script>
+</body>
+</html>

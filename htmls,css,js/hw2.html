@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>E-Commerce Product Page</title>
+  <!-- <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #f4f6f9;
+      margin: 0;
+      padding: 20px;
+    }
+
+    img {
+      border: 3px solid #444;
+      border-radius: 12px;
+      margin-top: 20px;
+      box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
+    }
+
+    .product-info {
+      margin-top: 15px;
+      color: #1a237e;
+    }
+
+    .product-info h2 {
+      color: #d32f2f;
+      margin-bottom: 8px;
+    }
+
+    .product-info p {
+      margin: 5px 0;
+      font-size: 16px;
+    }
+
+    table {
+      margin: 20px auto;
+      border-collapse: collapse;
+      width: 50%;
+      font-size: 15px;
+      color: #2e7d32;
+    }
+
+    table th, table td {
+      border: 1px solid #666;
+      padding: 10px;
+      text-align: center;
+    }
+
+    table th {
+      background-color: #eeeeee;
+    }
+
+    a.buy-btn {
+      display: inline-block;
+      margin-top: 20px;
+      color: white;
+      background: #2e7d32;
+      padding: 12px 24px;
+      text-decoration: none;
+      border-radius: 6px;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+
+    a.buy-btn:hover {
+      background: #1b5e20;
+    }
+
+    form {
+      margin: 30px auto;
+      text-align: left;
+      width: 320px;
+      padding: 20px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0px 4px 12px rgba(0,0,0,0.15);
+    }
+
+    form label {
+      color: #0d47a1;
+      font-weight: bold;
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    form input, form textarea, form select {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 15px;
+      border: 1px solid #aaa;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    form .checkbox-group {
+      margin-bottom: 15px;
+    }
+
+    form .checkbox-group label {
+      display: inline-block;
+      font-weight: normal;
+      color: #333;
+      margin-right: 10px;
+    }
+
+    form input[type="submit"] {
+      background: #1565c0;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+
+    form input[type="submit"]:hover {
+      background: #0d47a1;
+    }
+
+    .js-message {
+      color: purple;
+      margin-top: 20px;
+    }
+  </style> -->
+</head>
+<body>
+
+  <img src="https://via.placeholder.com/250" alt="Cool Sneakers" title="Sneakers">
+<!-- 
+  <div class="product-info">
+    <h2>Sneakers</h2>
+    <p><b>A:</b> Rs59.99</p>
+    <p><b>Description:</b> khareedlo</p>
+  </div>
+
+  <table>
+    <tr>
+      <th>yes</th>
+      <th>NO</th>
+    </tr>
+    <tr>
+      <td>s</td>
+      <td>20</td>
+    </tr>
+    <tr>
+      <td>m</td>
+      <td>30</td>
+    </tr>
+    <tr>
+      <td>l</td>
+      <td>40</td>
+    </tr>
+  </table>
+
+  <p>
+    <a href="https://example.com/buy" target="_blank" class="buy-btn">Buy Now</a>
+  </p>
+
+  <form>
+    <label>Customer Name:</label>
+    <input type="text" name="name">
+
+    <label>Email:</label>
+    <input type="email" name="email">
+
+    <label>Quantity:</label>
+    <input type="number" name="quantity" min="1">
+
+    <label>Address:</label>
+    <textarea name="address" rows="3"></textarea>
+
+    <div class="checkbox-group">
+      <label><input type="checkbox" name="color" value="Red"> Red</label>
+      <label><input type="checkbox" name="color" value="Blue"> Blue</label>
+      <label><input type="checkbox" name="color" value="Black"> Black</label>
+    </div>
+
+    <label>Payment Method:</label>
+    <select name="payment">
+      <option value="cod">Cash on Delivery</option>
+      <option value="card">Credit/Debit Card</option>
+      <option value="upi">UPI</option>
+      <option value="netbanking">Net Banking</option>
+    </select>
+
+    <input type="submit" value="Submit Order">
+  </form> -->
+
+  <script type="text/javascript">
+    document.write("<h3 class='js-message'>Hello from JavaScript!</h3>");
+    const x = 20;
+    let y = " ayush";
+    document.write("<p>Value of x+y = " + (x + y) + "</p>");
+    document.write("<p>PI = " + Math.PI + "</p>");
+    document.write("<p>Floor of PI = " + Math.floor(Math.PI) + "</p>");
+    var sum = 0;
+    for (var i = 0; i < 5; i++) {
+      sum += i;
+    }
+    document.write("<p>Sum of 0 to 4 = " + sum + "</p>");
+    var s1 = "hello"; 
+    var s2 = "";
+    for (var i = 0; i < s1.length; i++) {
+      s2 += s1.charAt(i);
+    }
+    document.write("<p>Copied string: " + s2 + "</p>");
+    alert("Order Submitted Successfully!");
+
+    for (var i = 1; i <= 5; i++) {
+     document.write("<p>Logging number: " + i + "</p>")
+    }
+
+    var ducks = ["Daffy", "Donald", "Daisy"];
+    var stock= []
+    for(var i=0; i<ducks.length; i++){
+      stock.push(ducks[i]);
+    }
+    for(var i=0; i<stock.length; i++){
+      document.write("<p>Duck in stock: " + stock[i] + ducks[i] + "</p>");
+
+
+    }
+    document.write(ducks.length);
+    document.write("<br>");
+    document.write(stock.length);
+    var s = "web technology"
+    var f = s.substr(0 , s.indexOf(" "));
+    document.write("<br>" + f);
+    document.write("<br>")
+
+    var a = "ayush is a good boy "
+    var s = a.split(" ")
+     a = a.split(" ")
+    
+   document.write(a)
+    var s = a.split(" ")
+    document.write("<br>")
+    s.reverse()
+    var joined = s.join("!")
+    
+    for (var i = 0; i < s.length; i++) {
+      document.write( s[i])
+    }
+    
+    document.write("<br>Joined: " + joined)
+
+    var cnt = 10;
+    var s1 = "" + cnt 
+    var s2 = cnt + "bananas , ah ah ah "
+    var n1 = parseInt("42 is the answer")
+    var n2 = parseFloat("boioyah")
+    document.write("<br>" + s1 + "<br>" + s2 + "<br>" + n1 + "<br>" + n2);
+  </script>
+
+</body>
+</html>

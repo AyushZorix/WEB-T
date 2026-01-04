@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Confirmation</title>
+</head>
+<body>
+  <h1>Booking Confirmed</h1>
+  <p>Your ticket is booked!</p>
+
+  <h2 id="summary">Summary will appear here</h2>
+  <h2>Total Bill: ₹<span id="bill">0</span></h2>
+
+  <button onclick="goBack()">Go Back</button>
+
+  <script>
+    const name = localStorage.getItem("name");
+    const from = localStorage.getItem("from");
+    const to = localStorage.getItem("to");
+    const nop = localStorage.getItem("nop");
+
+    const summary = document.getElementById("summary");
+    const bill = document.getElementById("bill");
+
+    let base = 1000;
+    let total = nop * base;
+
+    summary.innerHTML = `Name: ${name}<br>From: ${from}<br>To: ${to}<br>Passengers: ${nop}`;
+    bill.innerHTML = total;
+
+    function goBack() {
+      localStorage.clear();
+      window.location.href = "booking.html";
+    }
+  </script>
+</body>
+</html>

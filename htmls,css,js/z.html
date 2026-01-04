@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>ticket summary </h1>
+    <form >
+        <input type="text" name="name" id="name" placeholder="name" required><br><br>
+        <input type="text" name="from" id="from" placeholder="from"><br><br>
+        <input type="text" name="to" id="to" placeholder="to"><br><br>
+        <input type="number" name="nop" id="nop" placeholder="nop"><br><br>
+<button type="submit" onclick="fun1()">submit</button>
+    </form>
+
+    <h1>summary</h1>
+    <ul class="list"></ul>
+    <p>total bill is <span id="bill">0</span></p>
+
+</body>
+<script>
+    function fun1(){
+        event.preventDefault();
+       const name = document.getElementById("name").value;
+         const from = document.getElementById("from").value;
+            const to = document.getElementById("to").value;
+            let total = 0;
+                const nop = document.getElementById("nop").value;
+                const list = document.querySelector(".list");
+                const li = document.createElement("li"); 
+                li.innerHTML = `name: ${name} 
+                <br> from: ${from} to: ${to} nop: ${nop}`;
+                list.appendChild(li);
+                let base = 1000;
+                total = nop * base;
+                document.getElementById("bill").innerHTML = total;
+
+    }
+</script>
+
+
+
+
+</html>

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Topnav Black Theme - 3 Columns</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background-color: #f4f4f4;
+    }
+
+    /* Top Navigation Bar */
+    .topnav {
+      overflow: hidden;
+      background-color: #1a1a1a; /* Blackish color */
+      border-bottom: 1px solid #333;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .topnav a {
+      float: left;
+      display: block;
+      color: #f2f2f2;
+      text-align: center;
+      padding: 14px 16px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .topnav a:hover {
+      background-color: #fff4f4;
+      color: #342121;
+    }
+
+    .topnav a.right {
+      float: right;
+      background-color: #415341;
+      color: white;
+      border-radius: 4px;
+    }
+
+    .topnav a.right:hover {
+      background-color: #45a049;
+    }
+
+    /* Clearfix for float issues */
+    .topnav::after {
+      content: "";
+      clear: both;
+      display: table;
+    }
+
+    /* Main container */
+    .container {
+      display: flex;
+      justify-content: space-around;
+      margin: 40px;
+      gap: 20px;
+    }
+
+    .column {
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      width: 30%;
+    }
+
+    .column p {
+      color: #333;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+        align-items: center;
+      }
+      .column {
+        width: 80%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="topnav">
+    <a href="#home">Home</a>
+    <a href="#news">News</a>
+    <a href="#contact">Contact</a>
+    <a href="#about">About</a>
+    <a href="#login" class="right">Login</a>
+  </div>
+
+  <div class="container">
+    <div class="column">
+      <h2>Column 1</h2>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse efficitur purus vel erat faucibus, vel tincidunt ex consequat.</p>
+      <p>Donec aliquet elit et ante tincidunt varius. Sed luctus facilisis lorem.</p>
+      <p>Aliquam erat volutpat. Cras id sapien nunc.</p>
+    </div>
+
+    <div class="column">
+      <h2>Column 2</h2>
+      <p>Curabitur et odio a felis tincidunt facilisis. Sed vitae fringilla elit, nec ullamcorper neque.</p>
+      <p>Nullam vulputate tortor quis magna convallis, at varius justo facilisis.</p>
+      <p>Vivamus eu dui vel ipsum tincidunt facilisis non sit amet ligula.</p>
+    </div>
+
+    <div class="column">
+      <h2>Column 3</h2>
+      <p>Phasellus vel sapien nec sapien gravida gravida at eget magna.</p>
+      <p>Mauris tincidunt nunc ut est eleifend, nec consequat libero condimentum.</p>
+      <p>In sit amet nulla sit amet metus vestibulum ultrices.</p>
+    </div>
+  </div>
+
+</body>
+</html>

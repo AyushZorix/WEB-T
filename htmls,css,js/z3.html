@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>avail items</h1>
+    <div class="prod">
+        <h1>book - rs10</h1>
+        <button class="add" data-name="book" data-price="10" >add</button>
+    </div>
+    <div class="prod">
+        <h1>mouse - rs10</h1>
+        <button class="add" data-name="mouse" data-price="10" >add</button>
+    </div>
+    <div class="prod">
+        <h1>key - rs10</h1>
+        <button class="add" data-name="key" data-price="10" >add</button>
+    </div>
+   
+    <div>
+        <ul id="list"></ul>
+        <p>total bill is <span id="bill">0</span></p>
+    </div>
+</body>
+
+
+<script>
+
+const addButtons = document.querySelectorAll('.add');
+const list = document.getElementById('list');
+const bill = document.getElementById('bill');
+let total = 0;
+
+addButtons.forEach(it =>{
+    it.addEventListener('click' , () =>{
+        const ename = it.dataset.name;
+        const eprice = parseFloat(it.dataset.price);
+        const li = document.createElement('li');
+        li.innerHTML = `${ename} -- ${eprice}`;
+        list.appendChild(li);
+        
+        total += eprice;
+        bill.innerHTML = total;
+})
+})
+
+
+
+
+
+</script>
+</html>

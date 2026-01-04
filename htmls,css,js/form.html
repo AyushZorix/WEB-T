@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Form</title>
+
+</head>
+<body>
+    <form name="regform" onsubmit="return validateForm()">
+        <h2>Registration Form</h2>
+        <label for="name">Name:</label>
+        <input type="text" name="name" id="name" placeholder="Enter your name"><br>
+        
+        <label for="address">Address:</label>
+        <input type="text" name="address" id="address" placeholder="Enter your address"><br>
+        
+        <label for="email">Email:</label>
+        <input type="email" name="email" id="email" placeholder="Enter your email"><br>
+        
+        <label for="password">Password:</label>
+        <input type="password" name="password" id="password" placeholder="Enter password"><br>
+        
+        <label for="telephone">Telephone:</label>
+        <input type="tel" name="telephone" id="telephone" placeholder="Enter your telephone number"><br>
+        <br>
+        <input type="submit" value="Register">
+        <p class="error" id="error-msg"></p>
+    </form>
+
+    <script>
+        function validateForm() {
+            const form = document.forms["regform"];
+            const name = form["name"].value.trim();
+            const address = form["address"].value.trim();
+            const email = form["email"].value.trim();
+            const password = form["password"].value.trim();
+            const telephone = form["telephone"].value.trim();
+            const errorMsg = document.getElementById("error-msg");
+
+            if (name === "" || address === "" || email === "" || password === "" || telephone === "") {
+                errorMsg.textContent = "All fields are required!";
+                return false; 
+            }
+
+
+            
+            errorMsg.textContent = ""; 
+            return true; 
+        }
+        //DOM - document object model theory w
+    </script>
+</body>
+</html>
+
